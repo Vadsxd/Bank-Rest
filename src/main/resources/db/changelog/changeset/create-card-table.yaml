@@ -1,0 +1,42 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-card
+      author: Vadim Sannikov
+      changes:
+        - createTable:
+            tableName: card
+            columns:
+              - column:
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: card_pkey
+                  name: card_id
+                  type: BIGINT
+              - column:
+                  constraints:
+                    foreignKeyName: fk_user_id
+                    references: user(user_id)
+                  name: user_id
+                  type: BIGINT
+              - column:
+                  constraints:
+                    nullable: false
+                  name: number
+                  type: VARCHAR(255)
+              - column:
+                  constraints:
+                    nullable: false
+                  name: expire_time
+                  type: DATE
+              - column:
+                  constraints:
+                    nullable: false
+                  name: balance
+                  type: BIGINT
+              - column:
+                  constraints:
+                    nullable: false
+                  name: status
+                  type: VARCHAR(255)

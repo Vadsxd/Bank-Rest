@@ -1,0 +1,31 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-user
+      author: Vadim Sannikov
+      changes:
+        - createTable:
+            tableName: user
+            columns:
+              - column:
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: user_pkey
+                  name: user_id
+                  type: BIGINT
+              - column:
+                  constraints:
+                    nullable: false
+                  name: login
+                  type: VARCHAR(255)
+              - column:
+                  constraints:
+                    nullable: false
+                  name: password
+                  type: VARCHAR(255)
+              - column:
+                  constraints:
+                    nullable: false
+                  name: role
+                  type: VARCHAR(255)
