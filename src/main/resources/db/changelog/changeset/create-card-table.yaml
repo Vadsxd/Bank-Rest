@@ -40,3 +40,8 @@ databaseChangeLog:
                     nullable: false
                   name: status
                   type: VARCHAR(255)
+              - column:
+                  constraints:
+                    nullable: false
+                  name: block_request
+                  type: BOOLEAN

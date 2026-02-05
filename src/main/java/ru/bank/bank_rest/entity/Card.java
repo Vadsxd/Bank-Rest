@@ -36,7 +36,7 @@ public class Card {
     private String number;
 
     @Column(name = "expire_time", nullable = false, columnDefinition = "DATE")
-    private LocalDate expire_time;
+    private LocalDate expireTime;
 
     @Column(name = "balance", nullable = false)
     private Long balance;
@@ -44,6 +44,9 @@ public class Card {
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
     private CardStatus cardStatus;
+
+    @Column(name = "block_request", nullable = false)
+    private Boolean blockRequest;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
