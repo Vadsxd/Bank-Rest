@@ -11,9 +11,9 @@
   </p>
 
 <h2>Запуск</h2>
-*     git clone https://github.com/Vadsxd/Bank-Rest.git
-*     cd Bank-Rest
-*     docker-compose up -d
+1) git clone https://github.com/Vadsxd/Bank-Rest.git
+2) cd Bank-Rest 
+3) docker-compose up -d
 
 <h2>Swagger:</h2>
 * http://localhost:8080/swagger-ui/index.html#/
