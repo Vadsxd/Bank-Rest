@@ -1,6 +1,7 @@
 package ru.bank.bank_rest.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -33,7 +34,7 @@ public class AuthService {
 
     public AuthResponse signUp(AuthRequest request) {
 
-        var user = User.builder()
+        User user = User.builder()
                 .login(request.getLogin())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .role(Role.USER)
@@ -41,7 +42,7 @@ public class AuthService {
 
         userService.create(user);
 
-        var jwt = jwtProvider.generateToken(user);
+        String jwt = jwtProvider.generateToken(user);
         return new AuthResponse(jwt);
     }
 
@@ -51,11 +52,11 @@ public class AuthService {
                 request.getPassword()
         ));
 
-        var user = userService
+        UserDetails user = userService
                 .userDetailsService()
                 .loadUserByUsername(request.getLogin());
 
-        var jwt = jwtProvider.generateToken(user);
+        String jwt = jwtProvider.generateToken(user);
         return new AuthResponse(jwt);
     }
 }

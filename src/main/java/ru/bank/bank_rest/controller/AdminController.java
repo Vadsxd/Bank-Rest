@@ -43,6 +43,15 @@ public class AdminController {
     }
 
     @ApiResponses(value = {
+            @ApiResponse(responseCode = "403", description = "Ошибка авторизации")
+    })
+    @Operation(summary = "Получить все карты, на которые висит запрос на блокировку")
+    @GetMapping("/getBlockRequestedCards")
+    public ResponseEntity<List<CardDto>> getBlockRequestedCards() {
+        return ResponseEntity.ok(adminService.getBlockRequestedCards());
+    }
+
+    @ApiResponses(value = {
             @ApiResponse(responseCode = "403", description = "Ошибка авторизации"),
             @ApiResponse(responseCode = "404", description = "Пользователь не найден")
     })

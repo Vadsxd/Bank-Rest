@@ -1,5 +1,8 @@
 package ru.bank.bank_rest.util;
 
+import ru.bank.bank_rest.entity.Card;
+import ru.bank.bank_rest.exception.card.CardNegativeBalanceException;
+
 import java.security.SecureRandom;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -18,5 +21,16 @@ public interface CardUtil {
         }
 
         return "**** **** **** " + cardNumber.substring(cardNumber.length() - 4);
+    }
+
+    static void transferMoney(Card cardFrom, Card cardTo, Long balance) {
+        Long cardFromBalance = cardFrom.getBalance();
+
+        if (cardFromBalance - balance < 0) {
+            throw new CardNegativeBalanceException(cardFrom.getNumber());
+        }
+
+        cardFrom.setBalance(cardFromBalance - balance);
+        cardTo.setBalance(cardTo.getBalance() + balance);
     }
 }

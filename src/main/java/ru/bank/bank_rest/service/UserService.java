@@ -42,7 +42,8 @@ public class UserService {
     }
 
     public User getCurrentUser() {
-        var login = SecurityContextHolder.getContext().getAuthentication().getName();
+        String login = SecurityContextHolder.getContext().getAuthentication().getName();
+
         return getByLogin(login);
     }
 }

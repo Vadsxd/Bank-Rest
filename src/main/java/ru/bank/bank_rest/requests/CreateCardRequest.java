@@ -12,7 +12,7 @@ import java.time.LocalDate;
 @Schema(description = "Запрос на создание карты")
 public class CreateCardRequest {
     @Schema(description = "Id владельца карты", example = "32")
-    @NotBlank(message = "Id не может быть пустым")
+    @NotNull(message = "Id не может быть пустым")
     private Long userId;
 
     @Schema(description = "Срок действия карты", example = "30.05.2024")

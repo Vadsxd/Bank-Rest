@@ -10,13 +10,14 @@ import ru.bank.bank_rest.entity.Card;
 import ru.bank.bank_rest.entity.User;
 import ru.bank.bank_rest.entity.enums.CardStatus;
 import ru.bank.bank_rest.entity.enums.Role;
+import ru.bank.bank_rest.mappers.CardMapper;
 import ru.bank.bank_rest.repository.CardRepo;
 import ru.bank.bank_rest.repository.UserRepo;
 import ru.bank.bank_rest.requests.CreateCardRequest;
 import ru.bank.bank_rest.util.CardUtil;
 
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Objects;
 
 @Service
 public class AdminService {
@@ -35,6 +36,10 @@ public class AdminService {
                 new ResponseStatusException(HttpStatus.NOT_FOUND, "Данный пользователь не зарегистрирован"));
 
         String cardNumber = CardUtil.generateCardNumber();
+
+        while (cardRepo.existsByNumber(cardNumber)) {
+            cardNumber = CardUtil.generateCardNumber();
+        }
 
         String encryptedCardNumber = CardUtil.encryptCardNumber(cardNumber);
 
@@ -112,17 +117,15 @@ public class AdminService {
         userRepo.save(user);
     }
 
-    public List<CardDto> getAllCards() {
-        return cardRepo.findAll().stream()
-                .map(card -> CardDto.builder()
-                        .user(card.getUser())
-                        .expireTime(card.getExpireTime())
-                        .balance(card.getBalance())
-                        .cardStatus(card.getCardStatus())
-                        .number(card.getNumber())
-                        .blockRequest(card.getBlockRequest())
-                        .build())
-                .collect(Collectors.toList());
+    public List<CardDto> getBlockRequestedCards() {
+        List<Card> cards = cardRepo.findAllByBlockRequest(true);
 
+        return CardMapper.fromCardsToCardsDtos(cards);
+    }
+
+    public List<CardDto> getAllCards() {
+        List<Card> cards = cardRepo.findAll();
+
+        return CardMapper.fromCardsToCardsDtos(cards);
     }
 }
