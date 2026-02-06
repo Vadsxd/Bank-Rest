@@ -18,6 +18,9 @@ import ru.bank.bank_rest.repository.CardRepo;
 import ru.bank.bank_rest.requests.TransferMoneyRequest;
 import ru.bank.bank_rest.util.CardUtil;
 
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 @Service
 public class CardService {
     private final CardRepo cardRepo;
@@ -34,8 +37,15 @@ public class CardService {
         return CardMapper.fromCardToCardDto(card);
     }
 
-    public Page<CardDto> getUserCards(User user, Pageable pageable) {
+    public Page<CardDto> getUserCards(User user, Pageable pageable, Optional<String> number) {
         Page<Card> cards = cardRepo.findAllByUser(user, pageable);
+
+        if (number.isPresent()) {
+            String cardNumber = number.get();
+            cards = new PageImpl<>(cards.stream()
+                    .filter(card -> card.getNumber().contains(cardNumber))
+                    .collect(Collectors.toList()));
+        }
 
         return new PageImpl<>(CardMapper.fromCardsToCardsDtos(cards.getContent()));
     }

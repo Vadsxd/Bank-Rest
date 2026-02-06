@@ -3,7 +3,6 @@ package ru.bank.bank_rest.dto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Data;
-import ru.bank.bank_rest.entity.User;
 import ru.bank.bank_rest.entity.enums.CardStatus;
 
 import java.time.LocalDate;
@@ -12,8 +11,8 @@ import java.time.LocalDate;
 @Data
 @Schema(description = "Дто банковской карты")
 public class CardDto {
-    @Schema(description = "Пользователь карты")
-    private User user;
+    @Schema(description = "Логин пользователя карты")
+    private String login;
 
     @Schema(description = "Номер карты (отображается маской)")
     private String number;

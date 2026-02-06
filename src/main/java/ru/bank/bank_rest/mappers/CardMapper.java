@@ -9,10 +9,11 @@ import java.util.stream.Collectors;
 public interface CardMapper {
     static CardDto fromCardToCardDto(Card card) {
         return CardDto.builder()
-                .user(card.getUser())
+                .login(card.getUser().getLogin())
                 .cardStatus(card.getCardStatus())
                 .number(card.getNumber())
                 .expireTime(card.getExpireTime())
+                .balance(card.getBalance())
                 .blockRequest(card.getBlockRequest())
                 .build();
     }

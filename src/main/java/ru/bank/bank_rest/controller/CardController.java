@@ -15,12 +15,15 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.bank.bank_rest.dto.CardDto;
 import ru.bank.bank_rest.entity.User;
 import ru.bank.bank_rest.requests.TransferMoneyRequest;
 import ru.bank.bank_rest.service.CardService;
 import ru.bank.bank_rest.service.UserService;
+
+import java.util.Optional;
 
 @RequestMapping("/api/card")
 @RestController
@@ -50,10 +53,13 @@ public class CardController {
     })
     @Operation(summary = "Получить банковске карты пользователя")
     @GetMapping("/getUserCards")
-    public ResponseEntity<Page<CardDto>> getUserCards(@PageableDefault Pageable pageable) {
+    public ResponseEntity<Page<CardDto>> getUserCards(
+            @PageableDefault(size = 5) Pageable pageable,
+            @RequestParam(required = false) Optional<String> number
+    ) {
         User user = userService.getCurrentUser();
 
-        return ResponseEntity.ok(cardService.getUserCards(user, pageable));
+        return ResponseEntity.ok(cardService.getUserCards(user, pageable, number));
     }
 
     @ApiResponses(value = {
