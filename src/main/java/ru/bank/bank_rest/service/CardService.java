@@ -30,9 +30,22 @@ public class CardService {
         this.cardRepo = cardRepo;
     }
 
-    public CardDto getCard(Long id) {
-        Card card = cardRepo.findById(id).orElseThrow(() ->
+    public Card getById(Long id) {
+        return cardRepo.findById(id).orElseThrow(() ->
                 new ResponseStatusException(HttpStatus.NOT_FOUND, "Данной карты не существует"));
+    }
+
+    public Card getByNumber(String number) {
+        return cardRepo.findByNumber(number).orElseThrow(() ->
+                new ResponseStatusException(HttpStatus.NOT_FOUND, "Карты " + number + " не существует"));
+    }
+
+    public void save(Card card) {
+        cardRepo.save(card);
+    }
+
+    public CardDto getCard(Long id) {
+        Card card = getById(id);
 
         return CardMapper.fromCardToCardDto(card);
     }
@@ -62,11 +75,8 @@ public class CardService {
         String numberFrom = request.getNumberFrom();
         String numberTo = request.getNumberTo();
 
-        Card cardFrom = cardRepo.findByNumber(numberFrom).orElseThrow(() ->
-                new ResponseStatusException(HttpStatus.NOT_FOUND, "Карты-отправителя не существует"));
-
-        Card cardTo = cardRepo.findByNumber(numberTo).orElseThrow(() ->
-                new ResponseStatusException(HttpStatus.NOT_FOUND, "Карты-принимателя не существует"));
+        Card cardFrom = getByNumber(numberFrom);
+        Card cardTo = getByNumber(numberTo);
 
         if (cardRepo.existsByNumberAndUser(numberFrom, user)) {
             throw new CardOwnerException(numberFrom, user.getLogin());
@@ -78,20 +88,19 @@ public class CardService {
 
         CardUtil.transferMoney(cardFrom, cardTo, request.getBalance());
 
-        cardRepo.save(cardFrom);
-        cardRepo.save(cardTo);
+        save(cardFrom);
+        save(cardTo);
     }
 
     @Transactional
     public void blockCardRequest(Long id) {
-        Card card = cardRepo.findById(id).orElseThrow(() ->
-                new ResponseStatusException(HttpStatus.NOT_FOUND, "Данной карты не существует"));
+        Card card = getById(id);
 
         if (card.getCardStatus().equals(CardStatus.BLOCKED)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Карта уже заблокирована");
         }
 
         card.setBlockRequest(true);
-        cardRepo.save(card);
+        save(card);
     }
 }

@@ -22,11 +22,13 @@ import java.util.List;
 public class AdminService {
     private final UserRepo userRepo;
     private final CardRepo cardRepo;
+    private final CardService cardService;
 
     @Autowired
-    public AdminService(UserRepo userRepo, CardRepo cardRepo) {
+    public AdminService(UserRepo userRepo, CardRepo cardRepo, CardService cardService) {
         this.userRepo = userRepo;
         this.cardRepo = cardRepo;
+        this.cardService = cardService;
     }
 
     @Transactional
@@ -58,8 +60,7 @@ public class AdminService {
 
     @Transactional
     public CardDto blockCard(Long id) {
-        Card card = cardRepo.findById(id).orElseThrow(() ->
-                new ResponseStatusException(HttpStatus.NOT_FOUND, "Данной карты не существует"));
+        Card card = cardService.getById(id);
 
         if (card.getCardStatus().equals(CardStatus.BLOCKED)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Карта уже заблокирована");
@@ -67,22 +68,21 @@ public class AdminService {
 
         card.setCardStatus(CardStatus.BLOCKED);
         card.setBlockRequest(false);
-        cardRepo.save(card);
+        cardService.save(card);
 
         return CardMapper.fromCardToCardDto(card);
     }
 
     @Transactional
     public CardDto activateCard(Long id) {
-        Card card = cardRepo.findById(id).orElseThrow(() ->
-                new ResponseStatusException(HttpStatus.NOT_FOUND, "Данной карты не существует"));
+        Card card = cardService.getById(id);
 
         if (card.getCardStatus().equals(CardStatus.ACTIVE)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Карта уже активирована");
         }
 
         card.setCardStatus(CardStatus.ACTIVE);
-        cardRepo.save(card);
+        cardService.save(card);
 
         return CardMapper.fromCardToCardDto(card);
     }
