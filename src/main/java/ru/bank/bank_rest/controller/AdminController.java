@@ -57,7 +57,7 @@ public class AdminController {
     })
     @Operation(summary = "Создать банковскую карту")
     @PostMapping("/createCard")
-    public ResponseEntity<Card> createCard(@RequestBody @Valid CreateCardRequest request) {
+    public ResponseEntity<CardDto> createCard(@RequestBody @Valid CreateCardRequest request) {
         return ResponseEntity.ok(adminService.createCard(request));
     }
 
@@ -67,17 +67,18 @@ public class AdminController {
     })
     @Operation(summary = "Заблокировать банковскую карту")
     @PutMapping("/blockCard/{id}")
-    public ResponseEntity<Card> blockCard(@PathVariable Long id) {
+    public ResponseEntity<CardDto> blockCard(@PathVariable Long id) {
         return ResponseEntity.ok(adminService.blockCard(id));
     }
 
     @ApiResponses(value = {
             @ApiResponse(responseCode = "403", description = "Ошибка авторизации"),
-            @ApiResponse(responseCode = "400", description = "Карта уже активирована")
+            @ApiResponse(responseCode = "400", description = "Карта уже активирована"),
+            @ApiResponse(responseCode = "404", description = "Карты не существует")
     })
     @Operation(summary = "Активировать банковскую карту")
     @PutMapping("/activateCard/{id}")
-    public ResponseEntity<Card> activateCard(@PathVariable Long id) {
+    public ResponseEntity<CardDto> activateCard(@PathVariable Long id) {
         return ResponseEntity.ok(adminService.activateCard(id));
     }
 

@@ -17,7 +17,6 @@ import ru.bank.bank_rest.requests.CreateCardRequest;
 import ru.bank.bank_rest.util.CardUtil;
 
 import java.util.List;
-import java.util.Objects;
 
 @Service
 public class AdminService {
@@ -31,7 +30,7 @@ public class AdminService {
     }
 
     @Transactional
-    public Card createCard(CreateCardRequest request) {
+    public CardDto createCard(CreateCardRequest request) {
         User user = userRepo.findById(request.getUserId()).orElseThrow(() ->
                 new ResponseStatusException(HttpStatus.NOT_FOUND, "Данный пользователь не зарегистрирован"));
 
@@ -54,11 +53,11 @@ public class AdminService {
 
         cardRepo.save(card);
 
-        return card;
+        return CardMapper.fromCardToCardDto(card);
     }
 
     @Transactional
-    public Card blockCard(Long id) {
+    public CardDto blockCard(Long id) {
         Card card = cardRepo.findById(id).orElseThrow(() ->
                 new ResponseStatusException(HttpStatus.NOT_FOUND, "Данной карты не существует"));
 
@@ -70,11 +69,11 @@ public class AdminService {
         card.setBlockRequest(false);
         cardRepo.save(card);
 
-        return card;
+        return CardMapper.fromCardToCardDto(card);
     }
 
     @Transactional
-    public Card activateCard(Long id) {
+    public CardDto activateCard(Long id) {
         Card card = cardRepo.findById(id).orElseThrow(() ->
                 new ResponseStatusException(HttpStatus.NOT_FOUND, "Данной карты не существует"));
 
@@ -85,7 +84,7 @@ public class AdminService {
         card.setCardStatus(CardStatus.ACTIVE);
         cardRepo.save(card);
 
-        return card;
+        return CardMapper.fromCardToCardDto(card);
     }
 
     @Transactional
